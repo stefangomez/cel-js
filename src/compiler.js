@@ -42,8 +42,10 @@ function visitOperator(node) {
   switch (node.category) {
     case "binary":
       return visitBinaryOperator(node);
+    case "ternary":
+      return visitTernaryOperator(node);
     default:
-      throw new Error(`unknown operator ${node.category}`);
+      throw new Error(`unknown operator category ${node.category}`);
   }
 }
 
@@ -51,15 +53,53 @@ function visitBinaryOperator(node) {
   switch (node.type) {
     case "and": 
       return visitBinaryOperatorAnd(node);
+    case "or": 
+      return visitBinaryOperatorOr(node);
+    case "equal": 
+      return visitBinaryOperatorEqual(node);
+    case "notEqual": 
+      return visitBinaryOperatorNotEqual(node);
     case "greater":
       return visitBinaryOperatorGreater(node);
+    case "greaterOrEqual":
+      return visitBinaryOperatorGreatorOrEqual(node);
     case "less":
         return visitBinaryOperatorLess(node);
+    case "lessOrEqual":
+      return visitBinaryOperatorLessOrEqual(node);
+    case "add":
+      return visitBinaryOperatorAdd(node);
+    case "subtract":
+      return visitBinaryOperatorSubtract(node);
+    case "multiply":
+      return visitBinaryOperatorMultiply(node);
+    case "divide":
+      return visitBinaryOperatorDivide(node);
+    case "remainder":
+      return visitBinaryOperatorRemainder(node);
     default:
-      throw new Error(`unknown operator ${node.type}`)
+      throw new Error(`unknown binary operator ${node.type}`)
       
   }
 }
+
+function visitTernaryOperator(node) {
+  switch (node.type) {
+    case "conditional":
+      return visitTernaryOperatorConditional(node)
+    default:
+      throw new Error(`unknown ternary operator ${node.type}`)
+      
+  }
+}
+
+function visitTernaryOperatorConditional(node) {
+  const tertiary = visit(node.tertiary)
+  const rhs = visit(node.rhs)
+  const primary = visit(node.primary)
+  return (ctx) => tertiary(ctx) ? rhs(ctx) : primary(ctx)
+}
+
 
 function visitBinaryOperatorSelect(node) {
   const lhs = visit(node.lhs);
@@ -73,6 +113,36 @@ function visitBinaryOperatorAnd(node) {
   return (ctx) => lhs(ctx) && rhs(ctx);
 }
 
+function visitBinaryOperatorOr(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) || rhs(ctx);
+}
+
+function visitBinaryOperatorEqual(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) == rhs(ctx);
+}
+
+function visitBinaryOperatorNotEqual(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) != rhs(ctx);
+}
+
+function visitBinaryOperatorLessOrEqual(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) <= rhs(ctx);
+}
+
+function visitBinaryOperatorGreatorOrEqual(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) >= rhs(ctx);
+}
+
 function visitBinaryOperatorGreater(node) {
   const lhs = visit(node.lhs);
   const rhs = visit(node.rhs);
@@ -83,6 +153,36 @@ function visitBinaryOperatorLess(node) {
   const lhs = visit(node.lhs);
   const rhs = visit(node.rhs);
   return (ctx) => lhs(ctx) < rhs(ctx);
+}
+
+function visitBinaryOperatorAdd(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) + rhs(ctx);
+}
+
+function visitBinaryOperatorSubtract(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) - rhs(ctx);
+}
+
+function visitBinaryOperatorMultiply(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) * rhs(ctx);
+}
+
+function visitBinaryOperatorDivide(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) / rhs(ctx);
+}
+
+function visitBinaryOperatorRemainder(node) {
+  const lhs = visit(node.lhs);
+  const rhs = visit(node.rhs);
+  return (ctx) => lhs(ctx) % rhs(ctx);
 }
 
 

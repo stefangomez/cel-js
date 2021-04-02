@@ -67,7 +67,7 @@ Map
 
 Expression // "Common Expression"
   = t:Disjunction Spacing "?" Spacing s:Expression Spacing ":"  Spacing p:Expression
-	{ return {kind: "operator", type: "conditional", category:"tenary", primary:p, rhs:s, tertiary:t} }    
+	{ return {kind: "operator", type: "conditional", category:"ternary", primary:p, rhs:s, tertiary:t} }    
   / Disjunction
 
 
@@ -91,8 +91,8 @@ RelationOperation
   = Spacing type:RELATION_SYMBOL Spacing rhs:Addition 
   { return {kind: "operator", type, category:"binary", rhs} }
 RELATION_SYMBOL      
-  = "<" {return 'less'}
-  / "<=" {return 'lessOrEqual'}
+  = "<=" {return 'lessOrEqual'}
+  / "<" {return 'less'}
   / ">=" {return 'greaterOrEqual'}
   / ">" {return 'greater'}
   / "==" {return 'equal'}
